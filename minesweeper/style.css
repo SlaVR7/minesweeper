@@ -1,30 +1,109 @@
+body {
+  background-color: #b4b480;
+}
+
 .wrapper {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   position: absolute;
-  top: 0;
+  top: 200px;
   right: 0;
   bottom: 0;
   left: 0;
   background-color: rgba(7, 7, 7, 0.7);
 }
 
+.nav {
+  width: 500px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0 auto 30px;
+}
+
+.wrapper2 {
+  justify-content: start;
+}
+
+.closeBtn {
+  margin: 10px 10px 0 auto;
+  width: 50px;
+  height: 50px;
+  color: red;
+  font-size: 42px;
+  border-radius: 50%;
+  border: 3px solid red;
+  text-align: right;
+}
+
+.slashBtn {
+  width: 40px;
+  height: 4px;
+  background-color: red;
+  transform: rotate(-45deg) translate(-13px, 20px);
+}
+
+.slashBtn2 {
+  width: 40px;
+  height: 4px;
+  background-color: red;
+  transform: rotate(45deg) translate(17px, 10px);
+}
+
+.resultsTitle {
+  color: white;
+}
+
+.result {
+  color: white;
+}
+
+.resultsBtn {
+  padding: 10px;
+  background-color: rgba(255, 255, 255, 0.7);
+  text-align: center;
+}
+
 .game-over {
   margin-bottom: 20px;
-  font-size: 48px;
+  font-size: 38px;
   font-weight: bold;
   color: white;
+  text-align: center;
 }
 
 .new-game {
   padding: 10px;
   background-color: rgba(255, 255, 255, 0.7);
+  text-align: center;
 }
 
 .title {
   text-align: center;
+}
+
+.speaker {
+  width: 40px;
+  height: 40px;
+  background-size: contain;
+}
+
+.speakerOn {
+  background-image: url("assets/speaker.svg");
+}
+
+.speakerOff {
+  background-image: url("assets/mute.svg");
+}
+
+.speakerOnWhite {
+  background-image: url("assets/speakerWhite.svg");
+}
+
+.speakerOffWhite {
+  background-image: url("assets/muteWhite.svg");
 }
 
 .game-field {
@@ -35,7 +114,12 @@
   flex-direction: column;
   gap: 2px;
   border: 2px solid black;
-  background-color: #727272;
+  background-color: #9dbbff;
+  cursor: context-menu;
+}
+
+.gameFieldBlack {
+  background-color: #727272;;
 }
 
 .row {
@@ -47,8 +131,15 @@
 .cell {
   width: 20px;
   height: 20px;
-  background-color: #c0bfbf;
+  background-color: #727272;
   border: 1px solid black;
+  text-align: center;
+  font-size: 1.5em;
+  font-weight: bold;
+}
+
+.cellBlack {
+  background-color: #930000;
 }
 
 .bomb {
@@ -66,6 +157,60 @@
 .invisible {
   border-color: transparent;
   background-color: inherit;
+}
+
+.white {
+  color: white;
+}
+
+.yellow {
+  color: yellow;
+}
+
+.blue {
+  color: blue;
+}
+
+.pink {
+  color: pink;
+}
+
+.brown {
+  color: brown;
+}
+
+.violet {
+  color: violet;
+}
+
+.orange {
+  color: orange;
+}
+
+.green {
+  color: green;
+}
+
+/* Black theme */
+
+.theme {
+  width: 40px;
+  height: 40px;
+  background-size: cover;
+}
+
+.themeWhite {
+  background-image: url("assets/sun.svg");
+}
+
+.themeBlack {
+  width: 60px;
+  height: 60px;
+  background-image: url("assets/month.svg");
+}
+
+.bodyBlack {
+  background-color: #292970;
 }
 
 @media (min-width: 750px) {

@@ -1,0 +1,92 @@
+[33mcommit afc645752cd0071979848a4568cd8bd7a460a082[m[33m ([m[1;36mHEAD -> [m[1;32mshelter-part3[m[33m, [m[1;31morigin/shelter-part3[m[33m)[m
+Author: SlaVR <mylife0793@gmail.com>
+Date:   Sat Apr 8 22:45:36 2023 +0300
+
+    feat: finish page our pets popup without adaptive
+
+[33mcommit e722917b8672c0df7eb830aded2b83a4de9d5d97[m
+Author: SlaVR <mylife0793@gmail.com>
+Date:   Sat Apr 8 18:17:07 2023 +0300
+
+    feat: add page 2 popup
+
+[33mcommit c035f32a3e56779b328d7ed1c8f9851f583987a6[m
+Author: SlaVR <mylife0793@gmail.com>
+Date:   Sat Apr 8 11:27:31 2023 +0300
+
+    fix: pets src
+
+[33mcommit 98f4510c5840ad4bd575735fe8e5393a9935f9cc[m
+Author: SlaVR <mylife0793@gmail.com>
+Date:   Sat Apr 8 11:17:14 2023 +0300
+
+    feat: add popup template
+
+[33mcommit c69fca8993a65e98bc07e6db95dcfaca6e4857f9[m
+Author: SlaVR <mylife0793@gmail.com>
+Date:   Fri Apr 7 15:34:43 2023 +0300
+
+    feat: add pagination to pets page
+
+[33mcommit 41fae085807efda4d040a7fefb3f369a33606bea[m
+Author: SlaVR <mylife0793@gmail.com>
+Date:   Thu Apr 6 09:58:20 2023 +0300
+
+    feat: add burger menu and start slider
+
+[33mcommit 5b6454c9f595f8137d1ae8f3b3c6a149c2759139[m[33m ([m[1;31morigin/shelter[m[33m, [m[1;32mshelter[m[33m)[m
+Merge: 7f43ae5 821d985
+Author: Vyacheslav <105281241+SlaVR7@users.noreply.github.com>
+Date:   Thu Mar 30 18:32:37 2023 +0300
+
+    Merge pull request #5 from rolling-scopes-school/shelter-part2
+    
+    Shelter part2
+
+[33mcommit 821d985dbf6ccf760d69bebe3976c6dafbf9479c[m[33m ([m[1;31morigin/shelter-part2[m[33m, [m[1;32mshelter-part2[m[33m)[m
+Author: SlaVR <mylife0793@gmail.com>
+Date:   Thu Mar 30 17:53:03 2023 +0300
+
+    fix: hover in header
+
+[33mcommit 833ff6a041d11324f76ab48be9fe8d3b95b23c1a[m
+Author: SlaVR <mylife0793@gmail.com>
+Date:   Thu Mar 30 17:31:20 2023 +0300
+
+    feat: complite shelter task 2
+
+[33mcommit 7f43ae59ec5bfccfeae43b413046481798ce4852[m
+Author: SlaVR <mylife0793@gmail.com>
+Date:   Sat Mar 25 13:49:46 2023 +0300
+
+    fix: footer background
+
+[33mcommit 9e8c54297a487347aab208ab6477c81c534abc13[m
+Author: SlaVR <mylife0793@gmail.com>
+Date:   Sat Mar 25 12:01:01 2023 +0300
+
+    fix: footer fix
+
+[33mcommit fbcd11b9fdd6693044d7bf5376852a1b7633b736[m
+Author: SlaVR <mylife0793@gmail.com>
+Date:   Fri Mar 24 20:36:12 2023 +0300
+
+    feat: finish shelter1
+
+[33mcommit eff824182f78c7565da86313b82be8da66e0e04f[m
+Author: SlaVR <mylife0793@gmail.com>
+Date:   Fri Mar 24 18:32:15 2023 +0300
+
+    feat: add pats page
+
+[33mcommit 654db087d4f4917eb036427e883150c07efb1d36[m
+Author: SlaVR <mylife0793@gmail.com>
+Date:   Wed Mar 22 21:08:50 2023 +0300
+
+    feat: add all content
+
+[33mcommit 92c29afcf73c7a0ac94d57aa683dfeec47e40daa[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mmain[m[33m)[m
+Author: rs-app[bot] <57502719+rs-app[bot]@users.noreply.github.com>
+Date:   Tue Mar 21 17:00:14 2023 +0000
+
+    Initial commit
