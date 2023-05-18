@@ -1,3 +1,7 @@
+* {
+  box-sizing: border-box;
+}
+
 body {
   background-color: #b4b480;
 }
@@ -16,11 +20,12 @@ body {
 }
 
 .nav {
-  width: 500px;
+  width: 480px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin: 0 auto 30px;
+  padding: 0 5px;
 }
 
 .wrapper2 {
@@ -210,7 +215,7 @@ body {
 }
 
 .bodyBlack {
-  background-color: #292970;
+  background-color: #2e2e72;
 }
 
 @media (min-width: 750px) {

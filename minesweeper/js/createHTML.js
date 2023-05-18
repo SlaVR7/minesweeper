@@ -1,6 +1,6 @@
 import game from './placeMines';
 
-function createHTML() {
+function createHTML(parameter) {
 
   if (localStorage.getItem('theme') === 'black') document.body.classList.add('bodyBlack');
 
@@ -52,16 +52,20 @@ function createHTML() {
   info.classList.add('nav');
   document.body.appendChild(info);
 
+  if (!localStorage.getItem('time')) localStorage.setItem('time', '0');
   const timer = document.createElement('div');
   timer.classList.add('timer');
   if (localStorage.getItem('theme') === 'black') timer.classList.add('white');
-  timer.innerText = 'Time: 0';
+  if (!localStorage.getItem('time')) {
+    timer.innerText = 'Time: 0 seconds';
+  } else timer.innerText = `Time: ${localStorage.getItem('time')} seconds`;
   info.appendChild(timer);
 
+  if (!localStorage.getItem('click')) localStorage.setItem('click', '0');
   const countNumb = document.createElement('div');
   countNumb.classList.add('countNumb');
   if (localStorage.getItem('theme') === 'black') countNumb.classList.add('white');
-  countNumb.innerText = 'Number of click: 0';
+  countNumb.innerText = `Number of click: ${localStorage.getItem('click')}`;
   info.appendChild(countNumb);
 
   const gameField = document.createElement('div');
@@ -97,7 +101,10 @@ function createHTML() {
     gameField.appendChild(row);
     for (let j = 0; j < 10; j++) {
       const cell = document.createElement('div');
-      cell.classList.add('cell');
+      if (parameter !== 'new game' && localStorage.getItem(`class of X${i}Y${j}`)) {
+        cell.className = localStorage.getItem(`class of X${i}Y${j}`);
+        cell.innerText = localStorage.getItem(`inner of X${i}Y${j}`);
+      } else cell.classList.add('cell');
       if (localStorage.getItem('theme') === 'black') cell.classList.add('cellBlack');
       cell.setAttribute('id', `X${i}Y${j}`);
       row.appendChild(cell);

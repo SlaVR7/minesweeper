@@ -25,6 +25,10 @@ let title = document.querySelector('.title');
 let timer = document.querySelector('.timer');
 let countNumb = document.querySelector('.countNumb');
 let gameField = document.querySelector('.game-field');
+let currentTime;
+let lastTime = localStorage.getItem('time');
+let resultTime;
+let resultClick;
 
 
 let resultsArr = [];
@@ -100,10 +104,15 @@ function countMinesAround(event) {
 
 
 function startNewGame() {
+  localStorage.setItem('time', '0');
+  lastTime = 0;
+  resultTime = 0;
+  localStorage.setItem('click', '0');
+  resultClick = 0;
   createMatrix();
   placeMines(10);
   document.body.innerHTML = '';
-  createHTML.createHTML();
+  createHTML.createHTML('new game');
   isFirstMove = true;
   cells = document.querySelectorAll('.cell');
   cells.forEach((cell) => {
@@ -148,13 +157,18 @@ function gameOver(result) {
   wrapper.appendChild(resultString);
   wrapper.appendChild(newGameBtn2);
   clearTimeout(timerId);
+  localStorage.setItem('time', '0');
   newGameBtn2.addEventListener('click', startNewGame);
 }
 
 function showCurrentGameTime() {
-  const currentTime = Math.floor((new Date() - startTime) / 1000);
-  const timer = document.querySelector('.timer');
-  timer.innerText = `Time: ${currentTime} seconds`;
+  currentTime = Math.floor((new Date() - startTime) / 1000);
+  if (!isNaN(+lastTime)) {
+    resultTime = +lastTime + +currentTime;
+  } else resultTime = currentTime;
+
+  timer = document.querySelector('.timer');
+  timer.innerText = `Time: ${resultTime} seconds`;
   timerId = setTimeout(showCurrentGameTime, 1000);
 }
 
@@ -164,7 +178,8 @@ function showCell(event) {
     click++;
     playSound('click');
   }
-  numberOfClick.innerText = `Number of click: ${click}`;
+  resultClick = click + +localStorage.getItem('click');
+  numberOfClick.innerText = `Number of click: ${resultClick}`;
   if (isFirstMove) {
     startTime = new Date();
     showCurrentGameTime();
@@ -256,7 +271,6 @@ function changeTheme(event) {
     cell.classList.toggle('cellBlack');
   });
   gameField.classList.toggle('gameFieldBlack');
-  console.log('wrg')
 
   if (localStorage.getItem('speaker') === 'on' && event.target.classList.contains('themeBlack')) {
     speaker.className = 'speaker';
@@ -286,4 +300,21 @@ resultsBtn.addEventListener('click', showResults);
 
 if (localStorage.getItem('theme') === null) localStorage.setItem('theme', 'white');
 themeBtn.addEventListener('click', changeTheme);
+
+function saveGame() {
+  for (let i = 0; i < 100; i++) {
+    const currentClassesKey = 'class of ' + cells[i].getAttribute('id');
+    const currentClasses = cells[i].className;
+    const currentInner = cells[i].innerText;
+    const currentInnerKey = 'inner of ' + cells[i].getAttribute('id');
+    localStorage.setItem(currentClassesKey, currentClasses);
+    localStorage.setItem(currentInnerKey, currentInner);
+  }
+  localStorage.setItem('time', resultTime);
+  localStorage.setItem('click', resultClick);
+}
+
+window.addEventListener('beforeunload', saveGame);
+
+
 
