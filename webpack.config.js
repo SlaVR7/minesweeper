@@ -6,7 +6,6 @@ module.exports = {
   entry: {
     main: [
       './minesweeper/js/createHTML.js',
-      './minesweeper/js/placeMines.js',
       './minesweeper/js/gameProcess.js',
     ],
   },

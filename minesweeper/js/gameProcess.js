@@ -1,11 +1,8 @@
-import createHTML from "./createHTML";
-import { placeMines } from "./placeMines.js";
-import { field } from "./placeMines.js";
-import { rows } from './placeMines';
-import { cols } from './placeMines';
-import { createMatrix } from "./placeMines.js";
+import {
+  createHTML, selectMinesEl, createMatrix, placeMines, selectEl, clearMines, field
+} from './createHTML';
 
-let isFirstMove = true;
+if (!localStorage.getItem('isFirstMove') || localStorage.getItem('isFirstMove') === 'undefined') localStorage.setItem('isFirstMove', 'true');
 let cells = document.querySelectorAll('.cell');
 let newGameBtn = document.querySelector('.new-game');
 let numberOfOpenedCells;
@@ -25,6 +22,8 @@ let title = document.querySelector('.title');
 let timer = document.querySelector('.timer');
 let countNumb = document.querySelector('.countNumb');
 let gameField = document.querySelector('.game-field');
+let levelTitle = document.querySelector('.levelTitle');
+let minesTitle = document.querySelector('.howMatchMines');
 let currentTime;
 let lastTime = localStorage.getItem('time');
 let resultTime;
@@ -36,19 +35,34 @@ if (JSON.parse(localStorage.getItem('results'))) {
   resultsArr = JSON.parse(localStorage.getItem('results'));
 }
 
+function getNum(str, position) {
+  const arr = str.split('');
+  let result = '';
+  arr.forEach((item) => {
+    if (!isNaN(item) || item === 'Y') result += item;
+  });
+  result = result.trim();
+  const onlyNumbArr = result.split('Y');
+  if (position === 'left'){
+    return +onlyNumbArr[0];
+  } else if (position === 'right') {
+    return +onlyNumbArr[1];
+  }
+}
+
 function countMinesAround(event) {
   const currentCellId = event.target.getAttribute('id');
-  const leftCell = document.getElementById(`X${currentCellId[1] - 1}Y${currentCellId[3]}`);
-  const leftTopCell = document.getElementById(`X${currentCellId[1] - 1}Y${currentCellId[3] - 1}`);
-  const topCell = document.getElementById(`X${currentCellId[1]}Y${currentCellId[3] - 1}`);
-  const topRightCell = document.getElementById(`X${+currentCellId[1] + 1}Y${currentCellId[3] - 1}`);
-  const rightCell = document.getElementById(`X${+currentCellId[1] + 1}Y${currentCellId[3]}`);
-  const rightBottomCell = document.getElementById(`X${+currentCellId[1] + 1}Y${+currentCellId[3] + 1}`);
-  const bottomCell = document.getElementById(`X${currentCellId[1]}Y${+currentCellId[3] + 1}`);
-  const bottomLeftCell = document.getElementById(`X${currentCellId[1] - 1}Y${+currentCellId[3] + 1}`);
+  const leftCell = document.getElementById(`${getNum(currentCellId, 'left') - 1}Y${getNum(currentCellId, 'right')}`);
+  const leftTopCell = document.getElementById(`${getNum(currentCellId, 'left') - 1}Y${getNum(currentCellId, 'right') - 1}`);
+  const topCell = document.getElementById(`${getNum(currentCellId, 'left')}Y${getNum(currentCellId, 'right') - 1}`);
+  const topRightCell = document.getElementById(`${getNum(currentCellId, 'left') + 1}Y${getNum(currentCellId, 'right') - 1}`);
+  const rightCell = document.getElementById(`${getNum(currentCellId, 'left') + 1}Y${getNum(currentCellId, 'right')}`);
+  const rightBottomCell = document.getElementById(`${getNum(currentCellId, 'left') + 1}Y${getNum(currentCellId, 'right') + 1}`);
+  const bottomCell = document.getElementById(`${getNum(currentCellId, 'left')}Y${getNum(currentCellId, 'right') + 1}`);
+  const bottomLeftCell = document.getElementById(`${getNum(currentCellId, 'left') - 1}Y${getNum(currentCellId, 'right') + 1}`);
   const aroundCells = [leftCell, leftTopCell, topCell, topRightCell, rightCell, rightBottomCell,
     bottomCell, bottomLeftCell];
-  field[currentCellId[1]][currentCellId[3]].opened = true;
+  field[getNum(currentCellId, 'left')][getNum(currentCellId, 'right')].opened = true;
   let numberOfMinesAround = 0;
 
   aroundCells.forEach((item) => {
@@ -63,8 +77,8 @@ function countMinesAround(event) {
       if (neighbourCell) {
         neighbourId = neighbourCell.getAttribute('id');
       }
-      if (neighbourId && !neighbourCell.classList.contains('mine') && field[neighbourId[1]][neighbourId[3]].checked === false) {
-        field[neighbourId[1]][neighbourId[3]].checked = true;
+      if (neighbourId && !neighbourCell.classList.contains('mine') && field[getNum(neighbourId, 'left')][getNum(neighbourId, 'right')].checked === false) {
+        field[getNum(neighbourId, 'left')][getNum(neighbourId, 'right')].checked = true;
         countMinesAround({ target: neighbourCell });
       }
     });
@@ -92,28 +106,33 @@ function countMinesAround(event) {
     }
   }
   numberOfOpenedCells = 0;
-  for (let i = 0; i < rows; i++) {
-    for (let j = 0; j < cols; j++) {
+  for (let i = 0; i < +localStorage.getItem('level'); i++) {
+    for (let j = 0; j < +localStorage.getItem('level'); j++) {
       if (field[i][j].opened) {
-        numberOfOpenedCells++;
+        numberOfOpenedCells += 1;
       }
     }
   }
-  if (numberOfOpenedCells === 90) gameOver('win');
+  if (numberOfOpenedCells === (localStorage.getItem('level') ** 2) - selectMinesEl.valueAsNumber) gameOver('win');
 }
 
 
 function startNewGame() {
+  if (selectMinesEl.valueAsNumber < 10 || selectMinesEl.valueAsNumber > 99) {
+    alert('Number of mines should be between 10 and 99!');
+    return;
+  }
+  localStorage.setItem('howMatchMines', selectMinesEl.valueAsNumber);
   localStorage.setItem('time', '0');
   lastTime = 0;
   resultTime = 0;
   localStorage.setItem('click', '0');
   resultClick = 0;
   createMatrix();
-  placeMines(10);
+  placeMines();
+  localStorage.setItem('isFirstMove', 'true');
   document.body.innerHTML = '';
-  createHTML.createHTML('new game');
-  isFirstMove = true;
+  createHTML('new game');
   cells = document.querySelectorAll('.cell');
   cells.forEach((cell) => {
     cell.addEventListener('click', showCell);
@@ -133,6 +152,9 @@ function startNewGame() {
   timer = document.querySelector('.timer');
   countNumb = document.querySelector('.countNumb');
   gameField = document.querySelector('.game-field');
+  levelTitle = document.querySelector('.levelTitle');
+  minesTitle = document.querySelector('.howMatchMines');
+  selectEl.addEventListener('change', changeLevel);
 }
 
 function gameOver(result) {
@@ -146,7 +168,7 @@ function gameOver(result) {
   if (result === 'lose') {
     resultString.innerText = 'Game over. Try again';
   } else {
-    resultString.innerText = `Hooray! You found all mines in ${timer} seconds and ${numberOfOpenedCells} moves!`;
+    resultString.innerText = `Hooray! You found all mines in ${timer} seconds and ${click} moves!`;
     playSound('win');
     resultsArr.push(`Time: ${timer}, Moves: ${numberOfOpenedCells}`);
     localStorage.setItem('results', JSON.stringify(resultsArr));
@@ -180,20 +202,23 @@ function showCell(event) {
   }
   resultClick = click + +localStorage.getItem('click');
   numberOfClick.innerText = `Number of click: ${resultClick}`;
-  if (isFirstMove) {
+  if (localStorage.getItem('isFirstMove') === 'true' || localStorage.getItem('resumeGame') === 'true') {
     startTime = new Date();
     showCurrentGameTime();
   }
   if (event.target.classList.contains('bomb-here')) return;
-  if (event.target.classList.contains('mine') && isFirstMove === true) {
-    placeMines(10);
-    showCell(event);
-  } else if (event.target.classList.contains('mine') && isFirstMove === false) {
+  if (event.target.classList.contains('mine') && localStorage.getItem('isFirstMove') === 'true') {
+    startNewGame();
+    const currentCellId = event.target.getAttribute('id');
+    const currEl = document.getElementById(currentCellId);
+    showCell({ target: currEl });
+  } else if (event.target.classList.contains('mine') && localStorage.getItem('isFirstMove') === 'false') {
     event.target.classList.add('bomb');
     playSound('lose');
     gameOver('lose');
   } else countMinesAround(event);
-  isFirstMove = false;
+  localStorage.setItem('isFirstMove', 'false');
+  localStorage.setItem('resumeGame', 'false');
 }
 
 function playSound(type) {
@@ -267,6 +292,8 @@ function changeTheme(event) {
   title.classList.toggle('white');
   timer.classList.toggle('white');
   countNumb.classList.toggle('white');
+  minesTitle.classList.toggle('white');
+  levelTitle.classList.toggle('white');
   cells.forEach((cell) => {
     cell.classList.toggle('cellBlack');
   });
@@ -302,7 +329,7 @@ if (localStorage.getItem('theme') === null) localStorage.setItem('theme', 'white
 themeBtn.addEventListener('click', changeTheme);
 
 function saveGame() {
-  for (let i = 0; i < 100; i++) {
+  for (let i = 0; i < localStorage.getItem('level') ** 2; i++) {
     const currentClassesKey = 'class of ' + cells[i].getAttribute('id');
     const currentClasses = cells[i].className;
     const currentInner = cells[i].innerText;
@@ -310,11 +337,120 @@ function saveGame() {
     localStorage.setItem(currentClassesKey, currentClasses);
     localStorage.setItem(currentInnerKey, currentInner);
   }
-  localStorage.setItem('time', resultTime);
-  localStorage.setItem('click', resultClick);
+  if (click > 0) {
+    localStorage.setItem('time', resultTime);
+    localStorage.setItem('click', resultClick);
+  }
+  if (numberOfOpenedCells > 0) localStorage.setItem('isFirstMove', 'false');
+  localStorage.setItem('resumeGame', 'true');
 }
 
 window.addEventListener('beforeunload', saveGame);
+
+function changeLevel() {
+  const level = selectEl.value;
+  if (level === 'easy') {
+    localStorage.setItem('time', '0');
+    localStorage.setItem('click', 0);
+    localStorage.setItem('level', '10');
+    localStorage.setItem('isFirstMove', 'true');
+    createMatrix();
+    placeMines();
+    document.body.innerHTML = '';
+    createHTML('new game');
+    selectEl.addEventListener('change', changeLevel);
+
+    cells = document.querySelectorAll('.cell');
+    cells.forEach((cell) => {
+      cell.addEventListener('click', showCell);
+      cell.addEventListener('contextmenu', markBomb);
+    });
+    newGameBtn = document.querySelector('.new-game');
+    newGameBtn.addEventListener('click', startNewGame);
+    clearTimeout(timerId);
+    click = 0;
+    speaker = document.querySelector('.speaker');
+    speaker.addEventListener('click', () => playSound('soundToggle'));
+    resultsBtn = document.querySelector('.resultsBtn');
+    resultsBtn.addEventListener('click', showResults);
+    themeBtn = document.querySelector('.theme');
+    themeBtn.addEventListener('click', changeTheme);
+    title = document.querySelector('.title');
+    timer = document.querySelector('.timer');
+    countNumb = document.querySelector('.countNumb');
+    gameField = document.querySelector('.game-field');
+    levelTitle = document.querySelector('.levelTitle');
+    minesTitle = document.querySelector('.howMatchMines');
+  }
+  if (level === 'medium') {
+    localStorage.setItem('level', '15');
+    localStorage.setItem('time', '0');
+    localStorage.setItem('click', 0);
+    localStorage.setItem('isFirstMove', 'true');
+    createMatrix();
+    placeMines();
+    document.body.innerHTML = '';
+    createHTML('new game');
+    selectEl.addEventListener('change', changeLevel);
+
+    cells = document.querySelectorAll('.cell');
+    cells.forEach((cell) => {
+      cell.addEventListener('click', showCell);
+      cell.addEventListener('contextmenu', markBomb);
+    });
+    newGameBtn = document.querySelector('.new-game');
+    newGameBtn.addEventListener('click', startNewGame);
+    clearTimeout(timerId);
+    click = 0;
+    speaker = document.querySelector('.speaker');
+    speaker.addEventListener('click', () => playSound('soundToggle'));
+    resultsBtn = document.querySelector('.resultsBtn');
+    resultsBtn.addEventListener('click', showResults);
+    themeBtn = document.querySelector('.theme');
+    themeBtn.addEventListener('click', changeTheme);
+    title = document.querySelector('.title');
+    timer = document.querySelector('.timer');
+    countNumb = document.querySelector('.countNumb');
+    gameField = document.querySelector('.game-field');
+    levelTitle = document.querySelector('.levelTitle');
+    minesTitle = document.querySelector('.howMatchMines');
+  }
+  if (level === 'hard') {
+    localStorage.setItem('level', '25');
+    localStorage.setItem('time', '0');
+    localStorage.setItem('click', 0);
+    localStorage.setItem('isFirstMove', 'true');
+    createMatrix();
+    placeMines();
+    document.body.innerHTML = '';
+    createHTML('new game');
+    selectEl.addEventListener('change', changeLevel);
+
+    cells = document.querySelectorAll('.cell');
+    cells.forEach((cell) => {
+      cell.addEventListener('click', showCell);
+      cell.addEventListener('contextmenu', markBomb);
+    });
+    newGameBtn = document.querySelector('.new-game');
+    newGameBtn.addEventListener('click', startNewGame);
+    clearTimeout(timerId);
+    click = 0;
+    speaker = document.querySelector('.speaker');
+    speaker.addEventListener('click', () => playSound('soundToggle'));
+    resultsBtn = document.querySelector('.resultsBtn');
+    resultsBtn.addEventListener('click', showResults);
+    themeBtn = document.querySelector('.theme');
+    themeBtn.addEventListener('click', changeTheme);
+    title = document.querySelector('.title');
+    timer = document.querySelector('.timer');
+    countNumb = document.querySelector('.countNumb');
+    gameField = document.querySelector('.game-field');
+    levelTitle = document.querySelector('.levelTitle');
+    minesTitle = document.querySelector('.howMatchMines');
+  }
+}
+
+selectEl.addEventListener('change', changeLevel);
 
 
 
