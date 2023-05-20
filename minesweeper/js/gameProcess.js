@@ -1,5 +1,5 @@
 import {
-  createHTML, selectMinesEl, createMatrix, placeMines, selectEl, clearMines, field
+  createHTML, selectMinesEl, createMatrix, placeMines, selectEl, clearMines, field,
 } from './createHTML';
 
 if (!localStorage.getItem('isFirstMove') || localStorage.getItem('isFirstMove') === 'undefined') localStorage.setItem('isFirstMove', 'true');
@@ -35,7 +35,7 @@ if (JSON.parse(localStorage.getItem('results'))) {
   resultsArr = JSON.parse(localStorage.getItem('results'));
 }
 
-function getNum(str, position) {
+export function getNum(str, position) {
   const arr = str.split('');
   let result = '';
   arr.forEach((item) => {
@@ -51,6 +51,7 @@ function getNum(str, position) {
 }
 
 function countMinesAround(event) {
+  if (event.target.classList.contains('invisible') || event.target.innerText !== '') return;
   const currentCellId = event.target.getAttribute('id');
   const leftCell = document.getElementById(`${getNum(currentCellId, 'left') - 1}Y${getNum(currentCellId, 'right')}`);
   const leftTopCell = document.getElementById(`${getNum(currentCellId, 'left') - 1}Y${getNum(currentCellId, 'right') - 1}`);
@@ -62,23 +63,20 @@ function countMinesAround(event) {
   const bottomLeftCell = document.getElementById(`${getNum(currentCellId, 'left') - 1}Y${getNum(currentCellId, 'right') + 1}`);
   const aroundCells = [leftCell, leftTopCell, topCell, topRightCell, rightCell, rightBottomCell,
     bottomCell, bottomLeftCell];
-  field[getNum(currentCellId, 'left')][getNum(currentCellId, 'right')].opened = true;
   let numberOfMinesAround = 0;
 
   aroundCells.forEach((item) => {
     if (item && item.classList.contains('mine')) numberOfMinesAround += 1;
   });
 
-  if (numberOfMinesAround === 0) {
+  if (numberOfMinesAround === 0 && !event.target.classList.contains('bomb-here')) {
     event.target.classList.add('invisible');
-    event.target.classList.remove('bomb-here');
     aroundCells.forEach((neighbourCell) => {
       let neighbourId;
       if (neighbourCell) {
         neighbourId = neighbourCell.getAttribute('id');
       }
-      if (neighbourId && !neighbourCell.classList.contains('mine') && field[getNum(neighbourId, 'left')][getNum(neighbourId, 'right')].checked === false) {
-        field[getNum(neighbourId, 'left')][getNum(neighbourId, 'right')].checked = true;
+      if (neighbourId && !neighbourCell.classList.contains('mine') && !neighbourCell.classList.contains('invisible')) {
         countMinesAround({ target: neighbourCell });
       }
     });
@@ -106,20 +104,24 @@ function countMinesAround(event) {
     }
   }
   numberOfOpenedCells = 0;
+
   for (let i = 0; i < +localStorage.getItem('level'); i++) {
     for (let j = 0; j < +localStorage.getItem('level'); j++) {
-      if (field[i][j].opened) {
-        numberOfOpenedCells += 1;
-      }
+      if (document.getElementById(`${i}Y${j}`).classList.contains('invisible') || (document.getElementById(`${i}Y${j}`).innerText !== '')) numberOfOpenedCells += 1; // посчитай сколько ячеек открыто (имеют класс) и далее условие выйгрыша
     }
   }
+
   if (numberOfOpenedCells === (localStorage.getItem('level') ** 2) - selectMinesEl.valueAsNumber) gameOver('win');
+
 }
 
 
 function startNewGame() {
+  localStorage.setItem('resumeGame', 'false');
+  console.log('rg')
   if (selectMinesEl.valueAsNumber < 10 || selectMinesEl.valueAsNumber > 99) {
     alert('Number of mines should be between 10 and 99!');
+    selectMinesEl.valueAsNumber = 10;
     return;
   }
   localStorage.setItem('howMatchMines', selectMinesEl.valueAsNumber);
@@ -129,6 +131,7 @@ function startNewGame() {
   localStorage.setItem('click', '0');
   resultClick = 0;
   createMatrix();
+  clearMines();
   placeMines();
   localStorage.setItem('isFirstMove', 'true');
   document.body.innerHTML = '';
@@ -170,7 +173,7 @@ function gameOver(result) {
   } else {
     resultString.innerText = `Hooray! You found all mines in ${timer} seconds and ${click} moves!`;
     playSound('win');
-    resultsArr.push(`Time: ${timer}, Moves: ${numberOfOpenedCells}`);
+    resultsArr.push(`Time: ${timer}, Moves: ${click}`);
     localStorage.setItem('results', JSON.stringify(resultsArr));
   }
   newGameBtn2.classList.add('new-game');
@@ -195,6 +198,7 @@ function showCurrentGameTime() {
 }
 
 function showCell(event) {
+  if (event.target.classList.contains('invisible') || event.target.innerText !== '' || event.target.classList.contains('bomb-here')) return;
   numberOfClick = document.querySelector('.countNumb');
   if (!event.target.classList.contains('invisible')) {
     click++;
@@ -317,7 +321,9 @@ function changeTheme(event) {
 }
 
 cells.forEach((cell) => {
-  cell.addEventListener('click', showCell);
+  cell.addEventListener('click', (event) => {
+    showCell(event)
+  });
   cell.addEventListener('contextmenu', markBomb);
 });
 
@@ -341,9 +347,12 @@ function saveGame() {
     localStorage.setItem('time', resultTime);
     localStorage.setItem('click', resultClick);
   }
-  if (numberOfOpenedCells > 0) localStorage.setItem('isFirstMove', 'false');
-  localStorage.setItem('resumeGame', 'true');
+  if (numberOfOpenedCells > 0) {
+    localStorage.setItem('isFirstMove', 'false');
+    localStorage.setItem('resumeGame', 'true');
+  }
 }
+
 
 window.addEventListener('beforeunload', saveGame);
 
@@ -353,6 +362,7 @@ function changeLevel() {
     localStorage.setItem('time', '0');
     localStorage.setItem('click', 0);
     localStorage.setItem('level', '10');
+    localStorage.setItem('howMatchMines', '10');
     localStorage.setItem('isFirstMove', 'true');
     createMatrix();
     placeMines();
@@ -384,6 +394,7 @@ function changeLevel() {
   }
   if (level === 'medium') {
     localStorage.setItem('level', '15');
+    localStorage.setItem('howMatchMines', '30');
     localStorage.setItem('time', '0');
     localStorage.setItem('click', 0);
     localStorage.setItem('isFirstMove', 'true');
@@ -417,6 +428,7 @@ function changeLevel() {
   }
   if (level === 'hard') {
     localStorage.setItem('level', '25');
+    localStorage.setItem('howMatchMines', '70');
     localStorage.setItem('time', '0');
     localStorage.setItem('click', 0);
     localStorage.setItem('isFirstMove', 'true');

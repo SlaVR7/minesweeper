@@ -2,12 +2,16 @@ export let selectEl;
 export let selectMinesEl;
 
 if (!localStorage.getItem('howMatchMines')) localStorage.setItem('howMatchMines', '10');
+if (!localStorage.getItem('resumeGame')) localStorage.setItem('resumeGame', 'false');
+if (!localStorage.getItem('time')) localStorage.setItem('time', '0');
+if (!localStorage.getItem('click')) localStorage.setItem('click', '0');
 
 export const field = [];
 
 if (!localStorage.getItem('level')) localStorage.setItem('level', '10');
 // Create matrix
 export function createMatrix() {
+  if (localStorage.getItem('resumeGame') === 'true') return;
   for (let i = 0; i < +localStorage.getItem('level'); i += 1) {
     field[i] = [];
     for (let j = 0; j < +localStorage.getItem('level'); j += 1) {
@@ -16,7 +20,7 @@ export function createMatrix() {
         checked: false,
         opened: false,
         id: `${i}Y${j}`,
-      };
+      }
     }
   }
 }
@@ -24,13 +28,16 @@ createMatrix();
 
 // Place mines
 export function clearMines() {
+  if (localStorage.getItem('resumeGame') === 'true') return;
   for (let i = 0; i < +localStorage.getItem('level'); i += 1) {
     for (let j = 0; j < +localStorage.getItem('level'); j += 1) {
       field[i][j].hasMine = false;
     }
   }
 }
+
 export function placeMines() {
+  if (localStorage.getItem('resumeGame') === 'true') return;
   for (let minesPlaced = 0; minesPlaced < localStorage.getItem('howMatchMines');) {
     const row = Math.floor(Math.random() * +localStorage.getItem('level'));
     const col = Math.floor(Math.random() * +localStorage.getItem('level'));
@@ -207,14 +214,12 @@ export function createHTML(parameter) {
     gameField.appendChild(row);
     for (let j = 0; j < +localStorage.getItem('level'); j++) {
       const cell = document.createElement('div');
-      if (parameter !== 'new game' && (localStorage.getItem(`class of ${i}Y${j}`))) {
+      if (parameter !== 'new game' && (localStorage.getItem('resumeGame') === 'true')) {
         cell.className = localStorage.getItem(`class of ${i}Y${j}`);
         cell.innerText = localStorage.getItem(`inner of ${i}Y${j}`);
       } else cell.classList.add('cell');
+
       if (localStorage.getItem('theme') === 'black') cell.classList.add('cellBlack');
-      // if (localStorage.getItem(`class of ${i}Y${j}`)) {
-      //
-      // }
       cell.setAttribute('id', `${i}Y${j}`);
       row.appendChild(cell);
     }
@@ -223,13 +228,15 @@ export function createHTML(parameter) {
   for (let i = 0; i < +localStorage.getItem('level'); i++) {
     for (let j = 0; j < +localStorage.getItem('level'); j++) {
       const cell = document.getElementById(`${i}Y${j}`);
-      if (field[i][j].hasMine) {
+      if (localStorage.getItem('resumeGame') === 'false' && field[i][j].hasMine === true) {
         cell.classList.add('mine');
       }
     }
   }
 }
 createHTML();
+
+
 
 
 
