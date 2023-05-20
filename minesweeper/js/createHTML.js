@@ -208,11 +208,11 @@ export function createHTML(parameter) {
   winSound.setAttribute('src', 'assets/sound/win.mp3');
   document.body.appendChild(winSound);
 
-  for (let i = 0; i < +localStorage.getItem('level'); i++) {
+  for (let i = 0; i < +localStorage.getItem('level'); i += 1) {
     const row = document.createElement('div');
     row.classList.add('row');
     gameField.appendChild(row);
-    for (let j = 0; j < +localStorage.getItem('level'); j++) {
+    for (let j = 0; j < +localStorage.getItem('level'); j += 1) {
       const cell = document.createElement('div');
       if (parameter !== 'new game' && (localStorage.getItem('resumeGame') === 'true')) {
         cell.className = localStorage.getItem(`class of ${i}Y${j}`);
@@ -225,8 +225,8 @@ export function createHTML(parameter) {
     }
   }
 
-  for (let i = 0; i < +localStorage.getItem('level'); i++) {
-    for (let j = 0; j < +localStorage.getItem('level'); j++) {
+  for (let i = 0; i < +localStorage.getItem('level'); i += 1) {
+    for (let j = 0; j < +localStorage.getItem('level'); j += 1) {
       const cell = document.getElementById(`${i}Y${j}`);
       if (localStorage.getItem('resumeGame') === 'false' && field[i][j].hasMine === true) {
         cell.classList.add('mine');
@@ -235,15 +235,3 @@ export function createHTML(parameter) {
   }
 }
 createHTML();
-
-
-
-
-
-
-
-
-
-
-
-

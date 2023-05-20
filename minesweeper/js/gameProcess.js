@@ -1,5 +1,5 @@
 import {
-  createHTML, selectMinesEl, createMatrix, placeMines, selectEl, clearMines, field,
+  createHTML, selectMinesEl, createMatrix, placeMines, selectEl, clearMines,
 } from './createHTML';
 
 if (!localStorage.getItem('isFirstMove') || localStorage.getItem('isFirstMove') === 'undefined') localStorage.setItem('isFirstMove', 'true');
@@ -29,13 +29,12 @@ let lastTime = localStorage.getItem('time');
 let resultTime;
 let resultClick;
 
-
 let resultsArr = [];
 if (JSON.parse(localStorage.getItem('results'))) {
   resultsArr = JSON.parse(localStorage.getItem('results'));
 }
 
-export function getNum(str, position) {
+function getNum(str, position) {
   const arr = str.split('');
   let result = '';
   arr.forEach((item) => {
@@ -43,7 +42,7 @@ export function getNum(str, position) {
   });
   result = result.trim();
   const onlyNumbArr = result.split('Y');
-  if (position === 'left'){
+  if (position === 'left') {
     return +onlyNumbArr[0];
   } else if (position === 'right') {
     return +onlyNumbArr[1];
@@ -105,9 +104,9 @@ function countMinesAround(event) {
   }
   numberOfOpenedCells = 0;
 
-  for (let i = 0; i < +localStorage.getItem('level'); i++) {
-    for (let j = 0; j < +localStorage.getItem('level'); j++) {
-      if (document.getElementById(`${i}Y${j}`).classList.contains('invisible') || (document.getElementById(`${i}Y${j}`).innerText !== '')) numberOfOpenedCells += 1; // посчитай сколько ячеек открыто (имеют класс) и далее условие выйгрыша
+  for (let i = 0; i < +localStorage.getItem('level'); i += 1) {
+    for (let j = 0; j < +localStorage.getItem('level'); j += 1) {
+      if (document.getElementById(`${i}Y${j}`).classList.contains('invisible') || (document.getElementById(`${i}Y${j}`).innerText !== '')) numberOfOpenedCells += 1;
     }
   }
 
@@ -115,10 +114,8 @@ function countMinesAround(event) {
 
 }
 
-
 function startNewGame() {
   localStorage.setItem('resumeGame', 'false');
-  console.log('rg')
   if (selectMinesEl.valueAsNumber < 10 || selectMinesEl.valueAsNumber > 99) {
     alert('Number of mines should be between 10 and 99!');
     selectMinesEl.valueAsNumber = 10;
@@ -201,7 +198,7 @@ function showCell(event) {
   if (event.target.classList.contains('invisible') || event.target.innerText !== '' || event.target.classList.contains('bomb-here')) return;
   numberOfClick = document.querySelector('.countNumb');
   if (!event.target.classList.contains('invisible')) {
-    click++;
+    click += 1;
     playSound('click');
   }
   resultClick = click + +localStorage.getItem('click');
@@ -335,7 +332,7 @@ if (localStorage.getItem('theme') === null) localStorage.setItem('theme', 'white
 themeBtn.addEventListener('click', changeTheme);
 
 function saveGame() {
-  for (let i = 0; i < localStorage.getItem('level') ** 2; i++) {
+  for (let i = 0; i < localStorage.getItem('level') ** 2; i += 1) {
     const currentClassesKey = 'class of ' + cells[i].getAttribute('id');
     const currentClasses = cells[i].className;
     const currentInner = cells[i].innerText;
@@ -463,6 +460,3 @@ function changeLevel() {
 }
 
 selectEl.addEventListener('change', changeLevel);
-
-
-
