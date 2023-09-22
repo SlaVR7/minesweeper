@@ -5,12 +5,12 @@ module.exports = {
   mode: 'production',
   entry: {
     main: [
-      './minesweeper/js/createHTML.js',
-      './minesweeper/js/gameProcess.js',
+      './js/createHTML.js',
+      './js/gameProcess.js',
     ],
   },
   output: {
-    path: path.resolve(__dirname, 'minesweeper/dist'),
+    path: path.resolve(__dirname, 'dist'),
     filename: 'bundle.js',
   },
   optimization: {
