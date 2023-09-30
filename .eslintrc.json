@@ -4,12 +4,11 @@
         "commonjs": true,
         "es2021": true
     },
-    "extends": "airbnb",
     "overrides": [
     ],
     "parserOptions": {
-        "ecmaVersion": "latest"
+        "ecmaVersion": "latest",
+        "sourceType": "module"
     },
-    "rules": {
-    }
+    "ignorePatterns": ["dist"]
 }

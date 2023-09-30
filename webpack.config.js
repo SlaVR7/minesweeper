@@ -1,22 +1,29 @@
 const path = require('path');
 
 module.exports = {
-  watch: true,
-  mode: 'production',
-  entry: {
-    main: [
-      './js/createHTML.js',
-      './js/gameProcess.js',
+  mode: 'development',
+  entry: './js/gameProcess.js',
+  output: {
+    filename: 'bundle.js',
+    path: path.resolve(__dirname, 'dist'),
+  },
+  module: {
+    rules: [
+      {
+        test: /\.js$/,
+        exclude: /node_modules/,
+        use: {
+          loader: 'babel-loader',
+          options: {
+            presets: ['@babel/preset-env'],
+          },
+        },
+      },
     ],
   },
-  output: {
-    path: path.resolve(__dirname, 'dist'),
-    filename: 'bundle.js',
+  devServer: {
+    static: path.join(__dirname),
+    compress: true,
+    port: 8080,
   },
-  optimization: {
-    splitChunks: {
-      chunks: 'all',
-      name: 'bundle',
-    },
-  }
 };

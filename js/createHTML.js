@@ -1,234 +1,111 @@
+import createMatrix from './layout/createMatrix';
+import {placeMines} from "./layout/placeMines";
+import {createElement} from "./layout/createElement";
+import {setLocalStorage} from "./layout/setLocalStorage";
+import {createSpeaker} from "./layout/createSpeaker";
+import {createNumberMinesInput} from "./layout/createNumberMinesInput";
+
 export let selectEl;
 export let selectMinesEl;
 
-if (!localStorage.getItem('howMatchMines')) localStorage.setItem('howMatchMines', '10');
-if (!localStorage.getItem('resumeGame')) localStorage.setItem('resumeGame', 'false');
-if (!localStorage.getItem('time')) localStorage.setItem('time', '0');
-if (!localStorage.getItem('click')) localStorage.setItem('click', '0');
-
 export const field = [];
-
-if (!localStorage.getItem('level')) localStorage.setItem('level', '10');
-// Create matrix
-export function createMatrix() {
-  if (localStorage.getItem('resumeGame') === 'true') return;
-  for (let i = 0; i < +localStorage.getItem('level'); i += 1) {
-    field[i] = [];
-    for (let j = 0; j < +localStorage.getItem('level'); j += 1) {
-      field[i][j] = {
-        hasMine: false,
-        checked: false,
-        opened: false,
-        id: `${i}Y${j}`,
-      }
-    }
-  }
-}
+setLocalStorage();
 createMatrix();
-
-// Place mines
-export function clearMines() {
-  if (localStorage.getItem('resumeGame') === 'true') return;
-  for (let i = 0; i < +localStorage.getItem('level'); i += 1) {
-    for (let j = 0; j < +localStorage.getItem('level'); j += 1) {
-      field[i][j].hasMine = false;
-    }
-  }
-}
-
-export function placeMines() {
-  if (localStorage.getItem('resumeGame') === 'true') return;
-  for (let minesPlaced = 0; minesPlaced < localStorage.getItem('howMatchMines');) {
-    const row = Math.floor(Math.random() * +localStorage.getItem('level'));
-    const col = Math.floor(Math.random() * +localStorage.getItem('level'));
-    if (!field[row][col].hasMine) {
-      field[row][col].hasMine = true;
-      minesPlaced += 1;
-    }
-  }
-}
 placeMines();
 
 export function createHTML(parameter) {
+  const isBlackTheme = localStorage.getItem('theme') === 'black';
+  const isSpeakerOn = localStorage.getItem('speaker') === 'on';
+  const isResumeGame = localStorage.getItem('resumeGame') === 'true';
+  const level = +localStorage.getItem('level');
+  const time = localStorage.getItem('time');
+  const numberOfClick = localStorage.getItem('click');
 
-  if (localStorage.getItem('theme') === 'black') document.body.classList.add('bodyBlack');
+  const heading = createElement('h1', 'title', 'Welcome to Minesweeper!');
+  const nav = createElement('div', 'nav');
+  const newGameBtn = createElement('button', 'new-game', 'New game');
+  const speaker = createSpeaker(isBlackTheme, isSpeakerOn);
+  const theme = createElement('div', 'theme themeWhite');
+  const resultsBtn = createElement('button', 'resultsBtn', 'Results');
+  const levelAndMines = createElement('div', 'level');
+  const levelContainer = createElement('div', 'levelContainer');
+  const levelTitle = createElement('div', 'levelTitle', 'Level:');
+  const select = createElement('select',undefined, undefined, {id: 'options'});
+  const option1 = createElement('option', undefined, 'easy', {value: 'easy'});
+  const option2 = createElement('option', undefined, 'medium', {value: 'medium'});
+  const option3 = createElement('option', undefined, 'hard', {value: 'hard'});
+  const minesContainer = createElement('div','minesContainer');
+  const howMatchMines = createElement('div', 'howMatchMines', 'Mines:');
+  const selectMines = createNumberMinesInput();
+  const info = createElement('div', 'nav');
+  const timer = createElement('div', 'timer', `Time: ${time} seconds`);
+  const countNumb = createElement('div', 'countNumb', `Number of click: ${numberOfClick}`);
+  const gameFieldContainer = createElement('div', 'gameFieldContainer');
+  const gameField = createElement('div', 'game-field');
+  const bombSound = createElement('audio', undefined, undefined, {id: 'bombSound', src: 'assets/sound/lose.wav'});
+  const flagSound = createElement('audio', undefined, undefined, {id: 'flagSound', src: 'assets/sound/click.wav'});
+  const clickSound = createElement('audio', undefined, undefined, {id: 'clickSound', src: 'assets/sound/tick.mp3'});
+  const winSound = createElement('audio', undefined, undefined, {id: 'winSound', src: 'assets/sound/win.mp3'});
 
-
-  const heading = document.createElement('h1');
-  heading.classList.add('title');
-  if (localStorage.getItem('theme') === 'black') heading.classList.add('white');
-  heading.innerText = 'Welcome to Minesweeper!';
-  document.body.appendChild(heading);
-
-  const nav = document.createElement('div');
-  nav.classList.add('nav');
-  document.body.appendChild(nav);
-
-  const newGameBtn = document.createElement('button');
-  newGameBtn.classList.add('new-game');
-  newGameBtn.innerText = 'New game';
-  nav.appendChild(newGameBtn);
-
-  const speaker = document.createElement('div');
-  speaker.classList.add('speaker');
-  if ((localStorage.getItem('theme') === 'black') && (localStorage.getItem('speaker') === 'on')) {
-    speaker.className = 'speaker speakerOnWhite';
-  } else if ((localStorage.getItem('theme') === 'black') && (localStorage.getItem('speaker') === 'off')) {
-    speaker.className = 'speaker speakerOffWhite';
-  } else if ((localStorage.getItem('theme') === 'white') && (localStorage.getItem('speaker') === 'off')) {
-    speaker.className = 'speaker speakerOff';
-  } else if ((localStorage.getItem('theme') === 'white') && (localStorage.getItem('speaker') === 'on')) {
-    speaker.className = 'speaker speakerOn';
-  } else {
-    speaker.className = 'speaker speakerOn';
-    localStorage.setItem('speaker', 'on');
+  if (time === 'undefined' || numberOfClick === 'undefined') {
+    localStorage.setItem('time', '0');
+    localStorage.setItem('click', '0');
   }
-  nav.appendChild(speaker);
 
-  const theme = document.createElement('div');
-  theme.classList.add('theme');
-  theme.classList.add('themeWhite');
-  if (localStorage.getItem('theme') === 'black') {
-    theme.classList.add('themeBlack');
-  }
-  nav.appendChild(theme);
-
-  const resultsBtn = document.createElement('button');
-  resultsBtn.classList.add('resultsBtn');
-  resultsBtn.innerText = 'Results';
-  nav.appendChild(resultsBtn);
-
-  const levelAndMines = document.createElement('div');
-  levelAndMines.classList.add('level');
-  document.body.appendChild(levelAndMines);
-
-  const levelContainer = document.createElement('div');
-  levelContainer.classList.add('levelContainer');
-  levelAndMines.appendChild(levelContainer);
-
-  const levelTitle = document.createElement('div');
-  levelTitle.classList.add('levelTitle');
-  if (localStorage.getItem('theme') === 'black') {
-    levelTitle.classList.add('white');
-  }
-  levelTitle.innerText = 'Level:';
-  levelContainer.appendChild(levelTitle);
-
-  const select = document.createElement('select');
-  select.setAttribute('id', 'options');
-  levelContainer.appendChild(select);
   selectEl = document.getElementById('options');
-
-  const option1 = document.createElement('option');
-  option1.setAttribute('value', 'easy');
-  option1.innerText = 'easy';
-  if (localStorage.getItem('level') === '10') option1.setAttribute('selected', '');
-  select.appendChild(option1);
-
-  const option2 = document.createElement('option');
-  option2.setAttribute('value', 'medium');
-  option2.innerText = 'medium';
-  if (localStorage.getItem('level') === '15') option2.setAttribute('selected', '');
-  select.appendChild(option2);
-
-  const option3 = document.createElement('option');
-  option3.setAttribute('value', 'hard');
-  option3.innerText = 'hard';
-  if (localStorage.getItem('level') === '25') option3.setAttribute('selected', '');
-  select.appendChild(option3);
-
-  const minesContainer = document.createElement('div');
-  minesContainer.classList.add('minesContainer');
-  levelAndMines.appendChild(minesContainer);
-
-  const howMatchMines = document.createElement('div');
-  howMatchMines.classList.add('howMatchMines');
-  if (localStorage.getItem('theme') === 'black') {
-    howMatchMines.classList.add('white');
-  }
-  howMatchMines.innerText = 'Mines:';
-  minesContainer.appendChild(howMatchMines);
-
-  const selectMines = document.createElement('input');
-  selectMines.setAttribute('id', 'selectMines');
-  selectMines.setAttribute('type', 'number');
-  selectMines.setAttribute('min', '10');
-  selectMines.setAttribute('max', '99');
-  selectMines.setAttribute('value', localStorage.getItem('howMatchMines'));
-  minesContainer.appendChild(selectMines);
   selectMinesEl = document.getElementById('selectMines');
   localStorage.setItem('howMatchMines', selectMinesEl.valueAsNumber);
 
-  const info = document.createElement('div');
-  info.classList.add('nav');
-  document.body.appendChild(info);
-
-  if (localStorage.getItem('time') === 'undefined') localStorage.setItem('time', '0');
-  const timer = document.createElement('div');
-  timer.classList.add('timer');
-  if (localStorage.getItem('theme') === 'black') timer.classList.add('white');
-  timer.innerText = `Time: ${localStorage.getItem('time')} seconds`;
-  info.appendChild(timer);
-
-  if (localStorage.getItem('click') === 'undefined') localStorage.setItem('click', '0');
-  const countNumb = document.createElement('div');
-  countNumb.classList.add('countNumb');
-  if (localStorage.getItem('theme') === 'black') countNumb.classList.add('white');
-  countNumb.innerText = `Number of click: ${localStorage.getItem('click')}`;
-  info.appendChild(countNumb);
-
-  const gameFieldContainer = document.createElement('div');
-  gameFieldContainer.classList.add('gameFieldContainer');
-  document.body.appendChild(gameFieldContainer);
-
-  const gameField = document.createElement('div');
-  gameField.classList.add('game-field');
-  if (localStorage.getItem('theme') === 'black') {
+  if (isBlackTheme) {
+    document.body.classList.add('bodyBlack');
+    heading.classList.add('white');
+    theme.classList.add('themeBlack');
+    levelTitle.classList.add('white');
+    howMatchMines.classList.add('white');
+    timer.classList.add('white');
+    countNumb.classList.add('white');
     gameField.classList.add('gameFieldBlack');
   }
-  gameFieldContainer.appendChild(gameField);
 
-  const bombSound = document.createElement('audio');
-  bombSound.setAttribute('id', 'bombSound');
-  bombSound.setAttribute('src', 'assets/sound/lose.wav');
-  document.body.appendChild(bombSound);
+  switch (level) {
+    case 10: option1.setAttribute('selected', '');
+    break;
+    case 15: option2.setAttribute('selected', '');
+    break;
+    case 25: option3.setAttribute('selected', '');
+  }
 
-  const flagSound = document.createElement('audio');
-  flagSound.setAttribute('id', 'flagSound');
-  flagSound.setAttribute('src', 'assets/sound/click.wav');
-  document.body.appendChild(flagSound);
+  nav.append(newGameBtn, speaker, theme, resultsBtn);
+  document.body.append(heading, nav, levelAndMines, info, gameFieldContainer, bombSound, flagSound, clickSound, winSound);
+  levelAndMines.append(levelContainer, minesContainer);
+  levelContainer.append(levelTitle, select);
+  select.append(option1, option2, option3);
+  minesContainer.append(howMatchMines, selectMines);
+  info.append(timer, countNumb);
+  gameFieldContainer.append(gameField);
 
-  const clickSound = document.createElement('audio');
-  clickSound.setAttribute('id', 'clickSound');
-  clickSound.setAttribute('src', 'assets/sound/tick.mp3');
-  document.body.appendChild(clickSound);
-
-  const winSound = document.createElement('audio');
-  winSound.setAttribute('id', 'winSound');
-  winSound.setAttribute('src', 'assets/sound/win.mp3');
-  document.body.appendChild(winSound);
-
-  for (let i = 0; i < +localStorage.getItem('level'); i += 1) {
-    const row = document.createElement('div');
-    row.classList.add('row');
-    gameField.appendChild(row);
-    for (let j = 0; j < +localStorage.getItem('level'); j += 1) {
+  for (let i = 0; i < level; i += 1) {
+    const row = createElement('div', 'row');
+    gameField.append(row);
+    for (let j = 0; j < level; j += 1) {
       const cell = document.createElement('div');
-      if (parameter !== 'new game' && (localStorage.getItem('resumeGame') === 'true')) {
+      if (parameter !== 'new game' && isResumeGame) {
         cell.className = localStorage.getItem(`class of ${i}Y${j}`);
         cell.innerText = localStorage.getItem(`inner of ${i}Y${j}`);
       } else cell.classList.add('cell');
 
-      if (localStorage.getItem('theme') === 'black') cell.classList.add('cellBlack');
+      if (isBlackTheme) {
+        cell.classList.add('cellBlack');
+      }
       cell.setAttribute('id', `${i}Y${j}`);
-      row.appendChild(cell);
+      row.append(cell);
     }
   }
 
-  for (let i = 0; i < +localStorage.getItem('level'); i += 1) {
-    for (let j = 0; j < +localStorage.getItem('level'); j += 1) {
+  for (let i = 0; i < level; i += 1) {
+    for (let j = 0; j < level; j += 1) {
       const cell = document.getElementById(`${i}Y${j}`);
-      if (localStorage.getItem('resumeGame') === 'false' && field[i][j].hasMine === true) {
+      if (!isResumeGame && field[i][j].hasMine === true) {
         cell.classList.add('mine');
       }
     }
