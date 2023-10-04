@@ -1,0 +1,306 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background-color: #b4b480;
+}
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background-color: rgba(7, 7, 7, 0.7);
+}
+
+.nav {
+  width: 480px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0 auto 20px;
+  padding: 0 10px;
+}
+
+.wrapper2 {
+  justify-content: start;
+}
+
+.closeBtn {
+  margin: 10px 10px 0 auto;
+  width: 50px;
+  height: 50px;
+  color: red;
+  font-size: 42px;
+  border-radius: 50%;
+  border: 3px solid red;
+  text-align: right;
+}
+
+.slashBtn {
+  width: 50px;
+  height: 4px;
+  background-color: red;
+  transform: rotate(-45deg) translate(-17px, 13px);
+}
+
+.slashBtn2 {
+  width: 50px;
+  height: 4px;
+  background-color: red;
+  transform: rotate(45deg) translate(9px, 13px);
+}
+
+.resultsTitle {
+  color: white;
+}
+
+.result {
+  color: white;
+}
+
+.resultsBtn {
+  padding: 10px;
+  background-color: rgba(255, 255, 255, 0.7);
+  text-align: center;
+}
+
+.game-over {
+  margin-bottom: 20px;
+  font-size: 38px;
+  font-weight: bold;
+  color: white;
+  text-align: center;
+}
+
+.new-game {
+  padding: 10px;
+  background-color: rgba(255, 255, 255, 0.7);
+  text-align: center;
+}
+
+.title {
+  text-align: center;
+}
+
+.speaker {
+  width: 40px;
+  height: 40px;
+  background-size: contain;
+}
+
+.speakerOn {
+  background-image: url("assets/speaker.svg");
+}
+
+.speakerOff {
+  background-image: url("assets/mute.svg");
+}
+
+.speakerOnWhite {
+  background-image: url("assets/speakerWhite.svg");
+}
+
+.speakerOffWhite {
+  background-image: url("assets/muteWhite.svg");
+}
+
+.minesContainer, .levelContainer {
+  display: flex;
+}
+
+.level {
+  width: 480px;
+  display: flex;
+  justify-content: space-between;
+  margin: 0 auto 20px;
+  padding: 0 20px;
+}
+
+.levelTitle, .howMatchMines {
+  margin-right: 5px;
+}
+
+.gameFieldContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.game-field {
+  margin: 0 auto;
+  padding: 5px 0;
+  display: inline-flex;
+  flex-direction: column;
+  gap: 2px;
+  border: 2px solid black;
+  background-color: #9dbbff;
+  cursor: context-menu;
+}
+
+.gameFieldBlack {
+  background-color: #727272;;
+}
+
+.row {
+  display: flex;
+  padding: 0 5px;
+  gap: 2px;
+}
+
+.cell {
+  width: 17px;
+  height: 17px;
+  background-color: #727272;
+  border: 1px solid black;
+  text-align: center;
+  font-size: 1em;
+  font-weight: bold;
+}
+
+.cellBlack {
+  background-color: #930000;
+}
+
+.bomb {
+  background-image: url("assets/bomb.svg");
+  background-size: contain;
+}
+
+.bomb-here {
+  background-image: url("assets/flag.svg");
+  background-size: 70%;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.invisible {
+  border-color: transparent;
+  background-color: inherit;
+}
+
+.white {
+  color: white;
+}
+
+.yellow {
+  color: yellow;
+}
+
+.blue {
+  color: blue;
+}
+
+.pink {
+  color: pink;
+}
+
+.brown {
+  color: brown;
+}
+
+.violet {
+  color: violet;
+}
+
+.orange {
+  color: orange;
+}
+
+.green {
+  color: green;
+}
+
+/* Black theme */
+
+.theme {
+  width: 40px;
+  height: 40px;
+  background-size: cover;
+}
+
+.themeWhite {
+  background-image: url("assets/sun.svg");
+}
+
+.themeBlack {
+  width: 60px;
+  height: 60px;
+  background-image: url("assets/month.svg");
+}
+
+.bodyBlack {
+  background-color: #2e2e72;
+}
+
+@media (min-width: 750px) {
+
+  .game-field {
+    gap: 3px;
+  }
+
+  .row {
+    gap: 3px;
+  }
+
+  .cell {
+    width: 24px;
+    height: 24px;
+    font-size: 1.5em;
+  }
+
+  .title {
+    margin-top: 0;
+  }
+
+  .new-game, .resultsBtn, .levelTitle, .howMatchMines, .timer, .countNumb {
+    font-size: 24px;
+  }
+
+  .levelTitle, .howMatchMines {
+    margin-right: 15px;
+  }
+
+  select {
+    font-size: 22px;
+  }
+
+  option {
+    font-size: 22px;
+  }
+
+  #selectMines {
+    font-size: 22px;
+  }
+}
+
+@media (min-width: 1987px) {
+
+  .game-field {
+    gap: 4px;
+  }
+
+  .row {
+    gap: 4px;
+  }
+
+  .cell {
+    width: 35px;
+    height: 35px;
+    font-size: 2em;
+  }
+
+  .title {
+    font-size: 2.5em;
+  }
+
+  .new-game, .resultsBtn, .levelTitle, .howMatchMines, .timer, .countNumb {
+    font-size: 24px;
+  }
+}
