@@ -1,4 +1,4 @@
-import { playSound } from "./playSound";
+import { playSound } from './playSound';
 
 export function markBomb(event) {
   event.preventDefault();

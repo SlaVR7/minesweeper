@@ -1,8 +1,11 @@
 const path = require('path');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = {
   mode: 'development',
-  entry: './js/gameProcess.js',
+  entry: {
+    createHTML: './js/gameProcess.js',
+  },
   output: {
     filename: 'bundle.js',
     path: path.resolve(__dirname, 'dist'),
@@ -21,9 +24,19 @@ module.exports = {
       },
     ],
   },
+  plugins: [
+    new CopyWebpackPlugin({
+      patterns: [
+        { from: 'index.html', to: 'index.html' },
+        { from: 'assets', to: 'assets' },
+        { from: 'style.css', to: 'style.css' },
+      ],
+    }),
+  ],
   devServer: {
-    static: path.join(__dirname),
+    static: path.join(__dirname, 'dist'),
     compress: true,
     port: 8080,
   },
+  devtool: 'source-map',
 };

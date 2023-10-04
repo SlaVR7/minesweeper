@@ -1,7 +1,7 @@
-import {getNum} from "./getNum";
-import {selectMinesEl} from "../createHTML";
-import {numberOfOpenedCells} from "../gameProcess";
-import {gameOver} from "./gameOver";
+import { getNum } from './getNum';
+import { selectMinesEl } from '../createHTML';
+import { gameParameters } from '../gameProcess';
+import { gameOver } from './gameOver';
 
 export function countMinesAround(event) {
   const cellClasses = event.target.classList;
@@ -49,18 +49,18 @@ export function countMinesAround(event) {
     const colorClasses = ['white', 'blue', 'yellow', 'orange', 'green', 'violet', 'brown', 'pink'];
     cellClasses.add(colorClasses[numberOfMinesAround - 1]);
   }
-  numberOfOpenedCells = 0;
+  gameParameters.numberOfOpenedCells = 0;
 
   for (let i = 0; i < level; i += 1) {
     for (let j = 0; j < level; j += 1) {
       const currentCell = document.getElementById(`${i}Y${j}`);
       if (currentCell.classList.contains('invisible') || currentCell.innerText !== '') {
-        numberOfOpenedCells += 1;
+        gameParameters.numberOfOpenedCells += 1;
       }
     }
   }
 
-  if (numberOfOpenedCells === (level ** 2) - selectMinesEl.valueAsNumber) {
+  if (gameParameters.numberOfOpenedCells === (level ** 2) - selectMinesEl.valueAsNumber) {
     gameOver('win');
   }
 }

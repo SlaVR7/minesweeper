@@ -1,6 +1,9 @@
-import {click, resultClick, startTime, numberOfClick, startNewGame, gameOver, countMinesAround} from "../gameProcess";
-import {playSound} from "./playSound";
-import {showCurrentGameTime} from "./showCurrentGameTime";
+import { gameParameters, layout } from '../gameProcess';
+import { playSound } from './playSound';
+import { showCurrentGameTime } from './showCurrentGameTime';
+import { startNewGame } from './startNewGame';
+import { gameOver } from './gameOver';
+import { countMinesAround } from './countMinesAround';
 
 export function showCell(event) {
   const isFirstMove = localStorage.getItem('isFirstMove') === 'true';
@@ -11,16 +14,16 @@ export function showCell(event) {
   }
 
   if (!cellClasses.contains('invisible')) {
-    click += 1;
+    gameParameters.click += 1;
     playSound('click');
   }
 
-  numberOfClick = document.querySelector('.countNumb');
-  resultClick = click + +localStorage.getItem('click');
-  numberOfClick.innerText = `Number of click: ${resultClick}`;
+  layout.numberOfClick = document.querySelector('.countNumb');
+  gameParameters.resultClick = gameParameters.click + +localStorage.getItem('click');
+  layout.numberOfClick.innerText = `Number of click: ${gameParameters.resultClick}`;
 
   if (isFirstMove || localStorage.getItem('resumeGame') === 'true') {
-    startTime = new Date();
+    gameParameters.startTime = new Date();
     showCurrentGameTime();
   }
   if (cellClasses.contains('bomb-here')) {

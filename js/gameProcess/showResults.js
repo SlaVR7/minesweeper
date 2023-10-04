@@ -1,5 +1,5 @@
-import { resultsArr } from "../gameProcess";
-import {createElement} from "../layout/createElement";
+import { resultsArr } from '../gameProcess';
+import { createElement } from '../layout/createElement';
 
 export function showResults() {
   const wrapper = createElement('div', 'wrapper wrapper2');

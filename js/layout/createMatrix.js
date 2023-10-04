@@ -1,4 +1,6 @@
-function createMatrix(field) {
+import { field } from '../gameProcess';
+
+function createMatrix() {
   if (localStorage.getItem('resumeGame') === 'true') return;
   for (let i = 0; i < +localStorage.getItem('level'); i += 1) {
     field[i] = [];

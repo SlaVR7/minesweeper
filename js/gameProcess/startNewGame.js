@@ -1,6 +1,6 @@
-import { selectMinesEl } from "../createHTML";
-import { lastTime, resultClick, resultTime } from "../gameProcess";
-import { resetParams } from "./resetParams";
+import { selectMinesEl } from '../createHTML';
+import { gameParameters } from '../gameProcess';
+import { resetParams } from './resetParams';
 
 export function startNewGame() {
   localStorage.setItem('resumeGame', 'false');
@@ -12,10 +12,9 @@ export function startNewGame() {
   }
 
   localStorage.setItem('howMatchMines', selectMinesEl.valueAsNumber);
-  lastTime = 0;
-  resultTime = 0;
-
-  resultClick = 0;
+  gameParameters.lastTime = 0;
+  gameParameters.resultTime = 0;
+  gameParameters.resultClick = 0;
 
   resetParams();
 }

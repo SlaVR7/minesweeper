@@ -1,4 +1,4 @@
-import { field } from '../createHTML';
+import { field } from '../gameProcess';
 
 export function placeMines() {
   if (localStorage.getItem('resumeGame') === 'true') return;

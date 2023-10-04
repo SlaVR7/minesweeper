@@ -1,4 +1,4 @@
-import {cells, countNumb, gameField, levelTitle, minesTitle, speaker, themeBtn, timer, title} from "../gameProcess";
+import { layout } from '../gameProcess';
 
 export function changeTheme(event) {
   const isSpeakerOn = localStorage.getItem('speaker') === 'on';
@@ -13,23 +13,23 @@ export function changeTheme(event) {
     localStorage.setItem('theme', 'white');
   }
 
-  const items = [title, timer, countNumb, minesTitle, levelTitle];
-  items.forEach(item => item.classList.toggle('white'));
-  cells.forEach((cell) => {
+  const items = [layout.title, layout.timer, layout.countNumb, layout.minesTitle, layout.levelTitle];
+  items.forEach((item) => item.classList.toggle('white'));
+  layout.cells.forEach((cell) => {
     cell.classList.toggle('cellBlack');
   });
-  gameField.classList.toggle('gameFieldBlack');
+  layout.gameField.classList.toggle('gameFieldBlack');
 
-  speaker.className = 'speaker';
+  layout.speaker.className = 'speaker';
   if (isSpeakerOn && isElementHasBlackTheme) {
-    speaker.classList.add('speakerOn');
+    layout.speaker.classList.add('speakerOn');
   } else if (!isSpeakerOn && !isElementHasBlackTheme) {
-    speaker.classList.add('speakerOffWhite');
+    layout.speaker.classList.add('speakerOffWhite');
   } else if (isSpeakerOn && !isElementHasBlackTheme) {
-    speaker.classList.add('speakerOnWhite');
+    layout.speaker.classList.add('speakerOnWhite');
   } else if (!isSpeakerOn && isElementHasBlackTheme) {
-    speaker.classList.add('speakerOff');
+    layout.speaker.classList.add('speakerOff');
   }
 
-  themeBtn.classList.toggle('themeBlack');
+  layout.themeBtn.classList.toggle('themeBlack');
 }

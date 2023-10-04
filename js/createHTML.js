@@ -1,19 +1,19 @@
 import createMatrix from './layout/createMatrix';
-import {placeMines} from "./layout/placeMines";
-import {createElement} from "./layout/createElement";
-import {setLocalStorage} from "./layout/setLocalStorage";
-import {createSpeaker} from "./layout/createSpeaker";
-import {createNumberMinesInput} from "./layout/createNumberMinesInput";
+import { placeMines } from './layout/placeMines';
+import { createElement } from './layout/createElement';
+import { setLocalStorage } from './layout/setLocalStorage';
+import { createSpeaker } from './layout/createSpeaker';
+import { createNumberMinesInput } from './layout/createNumberMinesInput';
+import { field } from './gameProcess';
 
 export let selectEl;
 export let selectMinesEl;
 
-export const field = [];
-setLocalStorage();
-createMatrix();
-placeMines();
-
 export function createHTML(parameter) {
+  setLocalStorage();
+  createMatrix();
+  placeMines();
+
   const isBlackTheme = localStorage.getItem('theme') === 'black';
   const isSpeakerOn = localStorage.getItem('speaker') === 'on';
   const isResumeGame = localStorage.getItem('resumeGame') === 'true';
@@ -30,11 +30,11 @@ export function createHTML(parameter) {
   const levelAndMines = createElement('div', 'level');
   const levelContainer = createElement('div', 'levelContainer');
   const levelTitle = createElement('div', 'levelTitle', 'Level:');
-  const select = createElement('select',undefined, undefined, {id: 'options'});
-  const option1 = createElement('option', undefined, 'easy', {value: 'easy'});
-  const option2 = createElement('option', undefined, 'medium', {value: 'medium'});
-  const option3 = createElement('option', undefined, 'hard', {value: 'hard'});
-  const minesContainer = createElement('div','minesContainer');
+  const select = createElement('select', undefined, undefined, { id: 'options' });
+  const option1 = createElement('option', undefined, 'easy', { value: 'easy' });
+  const option2 = createElement('option', undefined, 'medium', { value: 'medium' });
+  const option3 = createElement('option', undefined, 'hard', { value: 'hard' });
+  const minesContainer = createElement('div', 'minesContainer');
   const howMatchMines = createElement('div', 'howMatchMines', 'Mines:');
   const selectMines = createNumberMinesInput();
   const info = createElement('div', 'nav');
@@ -42,19 +42,15 @@ export function createHTML(parameter) {
   const countNumb = createElement('div', 'countNumb', `Number of click: ${numberOfClick}`);
   const gameFieldContainer = createElement('div', 'gameFieldContainer');
   const gameField = createElement('div', 'game-field');
-  const bombSound = createElement('audio', undefined, undefined, {id: 'bombSound', src: 'assets/sound/lose.wav'});
-  const flagSound = createElement('audio', undefined, undefined, {id: 'flagSound', src: 'assets/sound/click.wav'});
-  const clickSound = createElement('audio', undefined, undefined, {id: 'clickSound', src: 'assets/sound/tick.mp3'});
-  const winSound = createElement('audio', undefined, undefined, {id: 'winSound', src: 'assets/sound/win.mp3'});
+  const bombSound = createElement('audio', undefined, undefined, { id: 'bombSound', src: 'assets/sound/lose.wav' });
+  const flagSound = createElement('audio', undefined, undefined, { id: 'flagSound', src: 'assets/sound/click.wav' });
+  const clickSound = createElement('audio', undefined, undefined, { id: 'clickSound', src: 'assets/sound/tick.mp3' });
+  const winSound = createElement('audio', undefined, undefined, { id: 'winSound', src: 'assets/sound/win.mp3' });
 
   if (time === 'undefined' || numberOfClick === 'undefined') {
     localStorage.setItem('time', '0');
     localStorage.setItem('click', '0');
   }
-
-  selectEl = document.getElementById('options');
-  selectMinesEl = document.getElementById('selectMines');
-  localStorage.setItem('howMatchMines', selectMinesEl.valueAsNumber);
 
   if (isBlackTheme) {
     document.body.classList.add('bodyBlack');
@@ -69,9 +65,9 @@ export function createHTML(parameter) {
 
   switch (level) {
     case 10: option1.setAttribute('selected', '');
-    break;
+      break;
     case 15: option2.setAttribute('selected', '');
-    break;
+      break;
     case 25: option3.setAttribute('selected', '');
   }
 
@@ -83,6 +79,10 @@ export function createHTML(parameter) {
   minesContainer.append(howMatchMines, selectMines);
   info.append(timer, countNumb);
   gameFieldContainer.append(gameField);
+
+  selectEl = document.getElementById('options');
+  selectMinesEl = document.getElementById('selectMines');
+  localStorage.setItem('howMatchMines', selectMinesEl.valueAsNumber);
 
   for (let i = 0; i < level; i += 1) {
     const row = createElement('div', 'row');
@@ -111,4 +111,3 @@ export function createHTML(parameter) {
     }
   }
 }
-createHTML();
